@@ -16,7 +16,7 @@
 [![APScheduler](https://img.shields.io/badge/APScheduler-blue)](https://docs-python.ru/packages/modul-apscheduler-python/)
 [![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-blue)](https://docs.sqlalchemy.org/en/20/)
 [![alembic](https://img.shields.io/badge/alembic-blue)](https://alembic.sqlalchemy.org/en/latest/)
-[![pydentic](https://img.shields.io/badge/pydentic-blue)](https://pydantic-docs.helpmanual.io/)
+[![pydantic](https://img.shields.io/badge/pydentic-blue)](https://pydantic-docs.helpmanual.io/)
 
 
 ## Запуск проекта локально
