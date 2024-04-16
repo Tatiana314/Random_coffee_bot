@@ -1,0 +1,12 @@
+version: '3' 
+
+volumes: 
+  sqlite_data:
+
+services:
+  backend:
+    container_name: backend 
+    build: ./
+    env_file: .env
+    volumes: 
+      - sqlite_data:/app/data/

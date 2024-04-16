@@ -117,7 +117,7 @@ class User(Base):
             select(User).filter(User.email == email)
         )
         user = result.scalars().one_or_none()
-        if user is not None:
+        if user:
             user.is_active = True if not user.is_active else user.is_active
             await session.commit()
             return True
@@ -151,7 +151,7 @@ class User(Base):
     async def set_is_sent_status_true(users: List,
                                       session: AsyncSession):
         """Changing is_sent status to True."""
-        if len(users) > 0:
+        if len(users):
             for user in users:
                 user.is_sent = True if not user.is_sent else user.is_sent
             await session.commit()
@@ -160,7 +160,7 @@ class User(Base):
     async def set_is_sent_status_false(users: List,
                                        session: AsyncSession):
         """Changing is_sent status to False."""
-        if len(users) > 0:
+        if len(users):
             for user in users:
                 user.is_sent = False if user.is_sent else user.is_sent
             await session.commit()
