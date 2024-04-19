@@ -1,0 +1,9 @@
+venv
+.git
+.vscode
+.env
+random_coffe_bot.db
+.gitignore
+logging.log
+**/*__pycache__
+docker-compose.bac

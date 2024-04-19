@@ -1,13 +1,12 @@
 # Проект random_coffee_bot
 
-## Описание
+Проект random_coffee_bot - telegram-бот каждый понедельник группирует всех активных подписчиков в пары и осуществляет рассылку для офлайн или онлайн встречи с целью выпить вместе чашечку кофе или чая. В четверг происходит вторая рассылка - напоминание о встрече.
 
-### Телеграм-Бот для ЗАО "Groupe SEB" ###
-С помощью бота для сотрудников компаннии раз в неделю в случайном порядке подбирается пара из коллег для офлайн или онлайн встречи с целью выпить вместе чашечку кофе или чая. В конце рабочей недели приходит напоминание о встрече. Бот только подбирает пару, о встрече сотрудники договариваются самостоятельно.
 
 Функционал телеграм-бота:
-- для пользователя: регистрация, рассылка с именем и контактными данными коллеги (корпоративная почта), возможность на время отписаться от рассылкии -  не участвовать в распределении пары (в случае отпуска, болезни и тп) 
+- для пользователя: регистрация, рассылка с именем и контактными данными коллеги (электронная почта), возможность на время отписаться от рассылкии -  не участвовать в распределении пары (в случае отпуска, болезни и тп) 
 - для администратора: просмотр списка всех пользователей, возможность удалить пользователя из проекта, добавить пользователя в администраторы, а так же удалить его оттуда, отключение пользователя от рассылки
+
 
 ## Технологии
 [![Python](https://img.shields.io/badge/python-3.11-blue?logo=python)](https://www.python.org/)
@@ -19,99 +18,44 @@
 [![pydantic](https://img.shields.io/badge/pydantic-blue)](https://pydantic-docs.helpmanual.io/)
 
 
-## Запуск проекта локально
+## Запуск проекта
 
-Клонируйте репозиторий и перейдите в него:
+Для развертывания проекта в контейнерах необходимо установить docker compose
+Установка docker compose:
+```
+sudo apt update
+sudo apt install curl
+curl -fSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+sudo apt-get install docker-compose-plugin
+```
 
+Клонировать репозиторий:
 ```
-git clone git@github.com:Studio-Yandex-Practicum/random_coffee_bot_anna.git
-cd random_coffee_bot_anna
+git clone https://github.com/Tatiana314/random_coffee_bot.git && cd random_coffee_bot
 ```
 
-Создайте виртуальное окружение:
+Проект использует базу данных PostgreSQL.
+В директории random_coffee_bot необходимо создать и заполнить ".env" с переменными окружения.
 ```
-py -3.11 -m venv venv
-```
-Активируйте виртуальное окружение:
-```
-Windows: source venv/Scripts/activate
-Linux/macOS: source venv/bin/activate
-```
-Установите зависимости из файла requirements.txt:
-```
-pip install -r requirements.txt
-```
-В корне проекта создайте файл .env и поместите в него:
-```
+# Переменные для телеграм бота
 BOT_TOKEN='<токен вашего бота>'
-DATABASE_URL='sqlite+aiosqlite:///./random_coffe_bot.db'
-GEN_ADMIN_ID=<телеграмм id главного администратора>
-```
-Создайте базу данных, применив миграции (из корня проекта):
-```
-alembic upgrade head
-```
-Запустите бота (из корня проекта):
-```
-python bot.py
-```
-## Запуск проекта на сервере
-Клонируйте репозиторий и перейдите в него:
-```
-git clone git@github.com:Studio-Yandex-Practicum/random_coffee_bot_anna.git
-cd random_coffee_bot_anna
-```
-Создайте виртуальное окружение:
-```
-python3.11 -m venv venv
-```
-Активируйте виртуальное окружение:
-```
-source venv/bin/activate
-```
-Установите зависимости из файла requirements.txt:
-```
-pip install -r requirements.txt
-```
-В корне проекта создайте файл .env и поместите в него:
-```
-BOT_TOKEN='<токен вашего бота>'
-DATABASE_URL='sqlite+aiosqlite:///./random_coffe_bot.db'
-GEN_ADMIN_ID=<телеграмм id главного администратора>
-```
-Создайте базу данных, применив миграции (из корня проекта):
-```
-alembic upgrade head
-```
-Создайте юнита для автоматического перезапуска бота при перезагрузке сервера:
-```
-nano file_name.service
-```
-Поместите в файл следующее:
-```
-[Unit]
-Description=<описание вашего бота>
-After=multy-user.target
+GEN_ADMIN_ID=телеграмм id главного администратора>
 
-[Service]
-Type=simple
-ExecStart=/<путь до репозитория проекта>/random_coffee_bot_anna/venv/bin/python3.11 /<путь до репозитория проекта>/random_coffee_bot_anna/bot.py
-WorkingDirectory=/<путь до репозитория проекта>/random_coffee_bot_anna
-Restart=always
+# Переменные для PostgreSQL
+POSTGRES_DB=<название базы данных>
+POSTGRES_USER=<имя пользователя>
+POSTGRES_PASSWORD=<пароль пользователя>
+DB_HOST=db
+DB_PORT=5432
+DATABASE_URL='postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{DB_HOST}:{DB_PORT}/{POSTGRES_DB}'
+```
+Запустите docker compose:
+```
+docker compose up
+```
+Применение миграций и запуск приложение осуществляется автоматически.
 
-[Install]
-WantedBy=multi-user.target
-```
-Последовательно выполните следующие команды:
-```
-sudo cp file_name.service /etc/systemd/system
-sudo systemctl enable file_name.service
-sudo systemctl restart file_name.service
-```
-Для перезапуска бота на сервере используйте команду:
-```
-sudo systemctl restart file_name.service
-```
 ## Настройки рассылки
 Поменять дни и время рассылки можно в bot_app/core/constants.py
 ```
@@ -125,7 +69,7 @@ class MailingInt(IntEnum):
 class MailingStr(str, Enum):
     TRIGGER = 'cron'
     MAIL_TO_COUPLES_DAY = 'mon' - день расслыки для пар (принимает значения от 0 до 6, или mon, tue, wed, thu, fri, sat, sun, можно задать сразу несколько дней)
-    REMIND_MAIL_DAY = 'thu' - день расслыки с напоминанием (принимает значения от 0 до 6, или mon, tue, wed, thu, fri, sat, sun,  можно задать сразу несколько дней)
+    REMIND_MAIL_DAY = 'thu' - день рассылки с напоминанием (принимает значения от 0 до 6, или mon, tue, wed, thu, fri, sat, sun,  можно задать сразу несколько дней)
 ```
 
 

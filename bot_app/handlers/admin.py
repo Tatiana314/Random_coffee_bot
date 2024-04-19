@@ -13,6 +13,7 @@ from bot_app.filters.is_admin import IsAdmin
 from bot_app.handlers.constants import AdminConsts
 from bot_app.keyboards.reply import ADMIN_KBRD, CANCEL_ONLY_KBRD
 from bot_app.handlers.user_registration import user_reg_router
+from bot_app.mailing.distribution import distribute_pairs
 
 
 logger.add(LoggingSettings.FILE_NAME,

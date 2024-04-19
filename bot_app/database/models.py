@@ -1,9 +1,10 @@
+from datetime import datetime
 from typing import List
 
-from sqlalchemy import Boolean, Integer, String, select
+from sqlalchemy import BigInteger, Boolean, DateTime, Integer, String, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import (DeclarativeBase, Mapped, declared_attr,
-                            make_transient, mapped_column)
+                            mapped_column)
 
 from bot_app.core.config import settings
 
@@ -28,7 +29,7 @@ class Base(DeclarativeBase):
 class User(Base):
     """User model."""
     tg_id: Mapped[int] = mapped_column(
-        Integer, nullable=False, unique=True
+        BigInteger, nullable=False, unique=True
     )
     name: Mapped[str] = mapped_column(
         String(150), nullable=False
@@ -48,6 +49,10 @@ class User(Base):
     is_sent: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False
     )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.now
+    )
+
 
     def __repr__(self):
         is_admin_text = ', админ' if self.is_admin else ''
@@ -122,12 +127,12 @@ class User(Base):
             await session.commit()
             return True
         return False
-
+    
     @staticmethod
     async def get_all_activated(session: AsyncSession):
         """Getting all active objects."""
         result = await session.execute(
-            select(User).filter(User.is_active == 1)
+            select(User).filter(User.is_active == 1).order_by(User.updated_at)
         )
         return result.scalars().all()
 
@@ -136,15 +141,11 @@ class User(Base):
         """Receiving all objects to whom the mailing with couples was sent."""
         result = await session.execute(select(User).filter(User.is_sent == 1))
         return result.scalars().all()
-
+    
     @staticmethod
-    async def first_to_end_db(user, session: AsyncSession):
-        """Moving thirst user to last position in table."""
-        await User.remove(session, user)
-        user.id = None
-        session.expunge(user)
-        make_transient(user)
-        session.add(user)
+    async def move_to_end(user, session: AsyncSession):
+        """Move the user to the end of the active list."""
+        user.updated_at = datetime.now()
         await session.commit()
 
     @staticmethod

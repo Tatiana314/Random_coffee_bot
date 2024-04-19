@@ -18,10 +18,9 @@ async def distribute_pairs(session: AsyncSession) -> Dict:
     if len(actives) <= 1:
         return {}
     if len(actives) > 1:
-        await User.first_to_end_db(actives[0], session)
+        await User.move_to_end(actives[0], session)
     if len(actives) % 2 == 0:
         return {'pairs': get_unique_pairs(actives)}
-    middle_idx = len(actives) // 2
-    no_pair = actives.pop(middle_idx)
-    await User.first_to_end_db(no_pair, session)
+    no_pair = actives.pop(len(actives) // 2)
+    await User.move_to_end(no_pair, session)
     return {'pairs': get_unique_pairs(actives), 'no_pair': no_pair}

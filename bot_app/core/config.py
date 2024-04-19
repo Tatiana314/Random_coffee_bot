@@ -12,11 +12,14 @@ TIMEZONE = pytz.timezone(Timezone.TIMEZONE_MOSCOW)
 class Settings(BaseSettings):
     """Application settings class."""
     model_config = SettingsConfigDict(
-        env_file='.env', env_file_encoding='utf-8'
+        env_file='.env', env_file_encoding='utf-8', extra='forbid'
     )
     bot_token: str
     database_url: str
     gen_admin_id: int
+    postgres_db: str
+    postgres_user: str
+    postgres_password: str
 
 
 settings = Settings()
