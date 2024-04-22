@@ -33,7 +33,7 @@ sudo apt-get install docker-compose-plugin
 
 Клонировать репозиторий:
 ```
-git clone https://github.com/Tatiana314/random_coffee_bot.git && cd random_coffee_bot
+git clone https://github.com/Tatiana314/Random_coffee_bot.git && cd Random_coffee_bot
 ```
 
 Проект использует базу данных PostgreSQL.
